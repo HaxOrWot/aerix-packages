@@ -59,6 +59,28 @@
         "progress",
         "tables"
       ]
+    },
+    {
+      "name": "Kinetix",
+      "version": "1.0.0",
+      "description": "High-precision kinetic animation, harmonic spring physics, particle emitters, TrueColor canvas, and external pipeline tools for Aerix",
+      "repository": "https://github.com/HaxOrWot/Kinetix.git",
+      "license": "MIT",
+      "risk_rating": "CLEAN (LOW)",
+      "capabilities": [
+        "Pure Computation",
+        "Native Win32 Clock (FFI)",
+        "Process Execution"
+      ],
+      "tags": [
+        "animation",
+        "physics",
+        "spring",
+        "particles",
+        "canvas",
+        "easing",
+        "tools"
+      ]
     }
   ]
 }
