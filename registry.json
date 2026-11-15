@@ -7,7 +7,7 @@
     {
       "name": "ColorTerm",
       "version": "1.1.0",
-      "description": "ANSI 24-bit TrueColor, cursor movement, hex color, and styling library for terminal text in Aerix",
+      "description": "ANSI 24-bit TrueColor, cursor movement & hex styling",
       "repository": "https://github.com/HaxOrWot/ColorTerm.git",
       "license": "MIT",
       "risk_rating": "CLEAN (LOW)",
@@ -26,7 +26,7 @@
     {
       "name": "VecMath",
       "version": "1.0.0",
-      "description": "2D and 3D vector math and geometry library for games and physics in Aerix",
+      "description": "2D and 3D vector math and geometry library",
       "repository": "https://github.com/HaxOrWot/VecMath.git",
       "license": "MIT",
       "risk_rating": "CLEAN (LOW)",
@@ -44,7 +44,7 @@
     {
       "name": "CliKit",
       "version": "1.0.0",
-      "description": "Terminal UI utility kit for Aerix: Unicode boxes, progress bars, spinners, key-value tables, and dividers",
+      "description": "Terminal UI kit: Unicode boxes, progress bars & tables",
       "repository": "https://github.com/HaxOrWot/CliKit.git",
       "license": "MIT",
       "risk_rating": "CLEAN (LOW)",
@@ -63,7 +63,7 @@
     {
       "name": "Kinetix",
       "version": "1.1.0",
-      "description": "High-precision kinetic animation engine: harmonic spring physics, particle emitters, keyframe timelines, TrueColor canvas, and external FFmpeg GIF/video animation pipelines",
+      "description": "Kinetic animation engine, spring physics & FFmpeg pipelines",
       "repository": "https://github.com/HaxOrWot/Kinetix.git",
       "license": "MIT",
       "risk_rating": "CLEAN (LOW)",
