@@ -1,7 +1,26 @@
 {
   "registry_version": "1.0.0",
   "name": "Aerix Official Community Package Registry",
-  "updated_at": "2026-11-15T18:05:00Z",
+  "updated_at": "2026-11-15T18:13:00Z",
   "maintainer": "Aerix Core Team",
-  "packages": []
+  "packages": [
+    {
+      "name": "ColorTerm",
+      "version": "1.0.0",
+      "description": "ANSI 24-bit TrueColor and styling library for terminal text in Aerix",
+      "repository": "https://github.com/HaxOrWot/ColorTerm.git",
+      "license": "MIT",
+      "risk_rating": "CLEAN (LOW)",
+      "capabilities": [
+        "Pure Computation"
+      ],
+      "tags": [
+        "cli",
+        "terminal",
+        "color",
+        "ansi",
+        "truecolor"
+      ]
+    }
+  ]
 }
