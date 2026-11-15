@@ -25,8 +25,8 @@
 `aerix-packages` is the official, community-driven package registry for **Aerix**. Unlike unmoderated package registries that suffer from malware and supply-chain attacks, every package in this index is:
 
 1. **Security-Audited:** Inspected for dangerous native Windows OS capabilities (e.g. process injection, memory tampering, keylogging hooks).
-2. **Cryptographically Pinned:** Pinned to immutable Git tags/commits and SHA-256 hashes.
-3. **Zero-Execution:** Installing a package *never* executes arbitrary build scripts or background daemons.
+2. **Zero-Execution:** Installing a package *never* executes arbitrary build scripts or background daemons.
+3. **Source-Native:** Packages compile directly into your application binary with zero garbage collection or runtime overhead.
 
 ---
 
@@ -35,22 +35,24 @@
 ### 1. Search for Verified Packages
 ```powershell
 arx pkg search
-arx pkg search json
 ```
 
 ### 2. Install a Verified Package
 ```powershell
-arx pkg install AerixJson
+# By verified registry name:
+arx pkg install <PackageName>
+
+# Or directly by Git repository URL:
+arx pkg install https://github.com/username/my-aerix-lib.git
 ```
-This automatically runs the **Aerix Capability Security Scanner**, verifies the package against the registry, and installs clean `.arx` modules directly into `./modules/AerixJson`.
+This automatically runs the **Aerix Capability Security Scanner**, verifies the package against the registry, and installs clean `.arx` modules directly into `./modules/<PackageName>`.
 
 ### 3. Import in your Code
 ```aerix
-import AerixJson
+import "modules/MyLib/mod.arx"
 
 fn main() {
-    let data = AerixJson.parse("{\"status\":\"ok\"}")
-    println(data)
+    // Call functions from your installed module!
 }
 ```
 
@@ -69,11 +71,69 @@ Aerix automatically classifies all `#[extern]` bindings in every package:
 
 ---
 
-## 🤝 Submitting Your Package
+## 🤝 Submitting Your Package: Step-by-Step
 
-We welcome community packages! To add your library to this registry:
+Anyone can submit an Aerix package to this official index! Here is the complete walkthrough:
 
-1. Fork this repository.
-2. Add your package manifest under `packages/<YourPackageName>.json`.
-3. Add an entry to `registry.json`.
-4. Open a Pull Request. Our automated security bot and core team will review your code and merge it!
+### Step 1: Create Your Package Repository
+Create a Git repository on GitHub (e.g. `https://github.com/your-username/FastMath`).
+
+In your repository, include:
+* An **`aerix.json`** manifest:
+  ```json
+  {
+    "name": "FastMath",
+    "version": "1.0.0",
+    "description": "High-performance mathematical utilities for Aerix",
+    "author": "your-username",
+    "license": "MIT",
+    "main": "mod.arx"
+  }
+  ```
+* Your `.arx` source files (e.g. `mod.arx`).
+* A `README.md` documenting your functions.
+
+### Step 2: Audit Your Code Locally
+Ensure your code passes the Aerix security scanner:
+```powershell
+arx pkg audit .
+```
+
+### Step 3: Fork & Add Your Package
+1. **Fork** this repository (`HaxOrWot/aerix-packages`).
+2. Open `registry.json` in your fork and add your package entry to the `"packages"` array:
+   ```json
+   {
+     "name": "FastMath",
+     "version": "1.0.0",
+     "description": "High-performance mathematical utilities for Aerix",
+     "repository": "https://github.com/your-username/FastMath.git",
+     "license": "MIT",
+     "risk_rating": "CLEAN (LOW)",
+     "capabilities": ["Pure Computation"],
+     "tags": ["math", "utilities"]
+   }
+   ```
+3. Test your contribution locally:
+   ```powershell
+   python scripts/validate_registry.py
+   ```
+
+### Step 4: Open a Pull Request
+Submit a Pull Request (PR) from your fork to `HaxOrWot/aerix-packages:main`.
+
+---
+
+## 🔒 PR Safety & Anti-Tampering Protections
+
+What happens when someone opens a Pull Request?
+
+1. **Pull Requests do NOT modify the registry automatically:**
+   * A PR is only a *proposal*. No files in this repository change until the repository maintainer reviews and clicks **"Merge"**.
+
+2. **Automated CI Validation (`scripts/validate_registry.py`):**
+   * **Anti-Deletion Guard:** If a PR attempts to delete existing packages or modify another author's repository URL, the automated CI check **fails immediately** with an error.
+   * **Schema Verification:** Ensures valid SemVer, URL formats, and non-empty metadata.
+
+3. **Maintainer Code Review:**
+   * Maintainers review the visual diff on GitHub before merging. Invalid, malicious, or vandalized PRs are closed and discarded with a single click.
