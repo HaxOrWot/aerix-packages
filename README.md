@@ -22,39 +22,56 @@
 
 ## 🌟 What is this Repository?
 
-`aerix-packages` is the official, community-driven package registry for **Aerix**. Unlike unmoderated package registries that suffer from malware and supply-chain attacks, every package in this index is:
+`aerix-packages` is the official community package registry for **Aerix**. It contains **only the metadata registry index (`registry.json`)** and CI validation scripts.
 
-1. **Security-Audited:** Inspected for dangerous native Windows OS capabilities (e.g. process injection, memory tampering, keylogging hooks).
-2. **Zero-Execution:** Installing a package *never* executes arbitrary build scripts or background daemons.
-3. **Source-Native:** Packages compile directly into your application binary with zero garbage collection or runtime overhead.
+> [!IMPORTANT]
+> **No package source code lives in this repository.** Every package is hosted in its own independent repository. The Aerix package manager (`arx pkg`) automatically clones the package from its Git repository and installs it into the local `./modules/<PackageName>` directory.
 
 ---
 
 ## 🚀 Using Packages in Aerix
 
-### 1. Search for Verified Packages
+### 1. List Available Packages
 ```powershell
-arx pkg search
+arx pkg available
 ```
 
-### 2. Install a Verified Package
+### 2. Search for a Package
+```powershell
+arx pkg search math
+```
+
+### 3. Install a Verified Package
 ```powershell
 # By verified registry name:
-arx pkg install <PackageName>
+arx pkg install VecMath
 
 # Or directly by Git repository URL:
-arx pkg install https://github.com/username/my-aerix-lib.git
+arx pkg install https://github.com/HaxOrWot/VecMath.git
 ```
 This automatically runs the **Aerix Capability Security Scanner**, verifies the package against the registry, and installs clean `.arx` modules directly into `./modules/<PackageName>`.
 
-### 3. Import in your Code
-```aerix
-import "modules/MyLib/mod.arx"
+---
 
-fn main() {
-    // Call functions from your installed module!
-}
+## 📐 Mandatory Package Project Structure
+
+Every package submitted to the registry **must** strictly conform to the following layout:
+
+```text
+<PackageName>/
+├── aerix.json        <-- REQUIRED: Manifest in root (must point "main": "src/mod.arx")
+├── README.md         <-- REQUIRED: Documentation and usage guide
+├── LICENSE           <-- REQUIRED: Open-source license (MIT, Apache, etc.)
+└── src/              <-- MANDATORY: ALL source files must be inside src/
+    ├── mod.arx       <-- REQUIRED: Primary entry point
+    └── ...           <-- Submodules, helper files, or subfolders
 ```
+
+### Strict Rules Enforced by CI:
+1. **Source Code Isolation**: All `.arx` files **must** live inside the `src/` directory. No loose `.arx` files are allowed in the repository root.
+2. **Metadata Isolation**: `aerix.json`, `README.md`, `LICENSE`, and any non-code configuration files must live in the root directory **outside** `src/`.
+3. **Primary Entry**: `aerix.json` must specify `"main": "src/mod.arx"`.
+4. **Subdirectories Supported**: Packages can have multiple subfolders inside `src/` (e.g. `src/geom/rect.arx`); `arx` automatically discovers and links them recursively.
 
 ---
 
@@ -73,67 +90,25 @@ Aerix automatically classifies all `#[extern]` bindings in every package:
 
 ## 🤝 Submitting Your Package: Step-by-Step
 
-Anyone can submit an Aerix package to this official index! Here is the complete walkthrough:
-
-### Step 1: Create Your Package Repository
-Create a Git repository on GitHub (e.g. `https://github.com/your-username/FastMath`).
-
-In your repository, include:
-* An **`aerix.json`** manifest:
-  ```json
-  {
-    "name": "FastMath",
-    "version": "1.0.0",
-    "description": "High-performance mathematical utilities for Aerix",
-    "author": "your-username",
-    "license": "MIT",
-    "main": "mod.arx"
-  }
-  ```
-* Your `.arx` source files (e.g. `mod.arx`).
-* A `README.md` documenting your functions.
-
-### Step 2: Audit Your Code Locally
-Ensure your code passes the Aerix security scanner:
-```powershell
-arx pkg audit .
-```
-
-### Step 3: Fork & Add Your Package
-1. **Fork** this repository (`HaxOrWot/aerix-packages`).
-2. Open `registry.json` in your fork and add your package entry to the `"packages"` array:
+1. Create your package repository following the **Mandatory Layout** above.
+2. Verify it passes the auditor locally:
+   ```powershell
+   arx pkg audit .
+   ```
+3. Fork `HaxOrWot/aerix-packages`.
+4. In your fork, add an entry to `registry.json` under `"packages"`:
    ```json
    {
-     "name": "FastMath",
+     "name": "YourPackageName",
      "version": "1.0.0",
-     "description": "High-performance mathematical utilities for Aerix",
-     "repository": "https://github.com/your-username/FastMath.git",
+     "description": "Short description of your package",
+     "repository": "https://github.com/YourUsername/YourPackageName.git",
      "license": "MIT",
-     "risk_rating": "CLEAN (LOW)",
-     "capabilities": ["Pure Computation"],
-     "tags": ["math", "utilities"]
+     "risk_rating": "CLEAN (LOW)"
    }
    ```
-3. Test your contribution locally:
+5. Test validation locally:
    ```powershell
    python scripts/validate_registry.py
    ```
-
-### Step 4: Open a Pull Request
-Submit a Pull Request (PR) from your fork to `HaxOrWot/aerix-packages:main`.
-
----
-
-## 🔒 PR Safety & Anti-Tampering Protections
-
-What happens when someone opens a Pull Request?
-
-1. **Pull Requests do NOT modify the registry automatically:**
-   * A PR is only a *proposal*. No files in this repository change until the repository maintainer reviews and clicks **"Merge"**.
-
-2. **Automated CI Validation (`scripts/validate_registry.py`):**
-   * **Anti-Deletion Guard:** If a PR attempts to delete existing packages or modify another author's repository URL, the automated CI check **fails immediately** with an error.
-   * **Schema Verification:** Ensures valid SemVer, URL formats, and non-empty metadata.
-
-3. **Maintainer Code Review:**
-   * Maintainers review the visual diff on GitHub before merging. Invalid, malicious, or vandalized PRs are closed and discarded with a single click.
+6. Submit a **Pull Request (PR)**. Once reviewed, it will be merged and immediately available to all Aerix developers worldwide!

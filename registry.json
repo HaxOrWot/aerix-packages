@@ -1,7 +1,7 @@
 {
   "registry_version": "1.0.0",
   "name": "Aerix Official Community Package Registry",
-  "updated_at": "2026-11-15T18:13:00Z",
+  "updated_at": "2026-11-15T18:34:00Z",
   "maintainer": "Aerix Core Team",
   "packages": [
     {
@@ -20,6 +20,24 @@
         "color",
         "ansi",
         "truecolor"
+      ]
+    },
+    {
+      "name": "VecMath",
+      "version": "1.0.0",
+      "description": "2D and 3D vector math and geometry library for games and physics in Aerix",
+      "repository": "https://github.com/HaxOrWot/VecMath.git",
+      "license": "MIT",
+      "risk_rating": "CLEAN (LOW)",
+      "capabilities": [
+        "Pure Computation"
+      ],
+      "tags": [
+        "math",
+        "vector",
+        "geometry",
+        "physics",
+        "games"
       ]
     }
   ]
